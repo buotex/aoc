@@ -1,0 +1,13 @@
+name = "AoC2019"
+uuid = "3c980baf-e99b-46be-ab66-8060eea06bcf"
+authors = ["Buote Xu <buote.xu@gmail.com>"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
