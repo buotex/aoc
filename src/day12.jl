@@ -20,15 +20,6 @@ function totalEnergy(m::Moon)
   return m.pot * m.kin
 end
 
-function pseudoNormalize(x::T)::Int32 where T<:Number
-  if x > 0
-    return 1
-  elseif x < 0
-    return -1
-  else 
-    return 0
-  end
-end
 
 function updatePosition!(moon::Moon)
   moon.pos += moon.vel

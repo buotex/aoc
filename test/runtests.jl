@@ -1,13 +1,14 @@
 using Test
 using AoC2019
+using Revise
 
 @testset "computer.jl" begin
     # Write your own tests here.
-    @test AoC2019.run_program([3,0,99]).data[0:2] == [1,0,99]
-    @test AoC2019.run_program([3,9,8,9,10,9,4,9,99,-1,8]).output == [0]
-    @test AoC2019.run_program([3,9,8,9,10,9,4,9,99,-1,8],input=[8]).output == [1]
-    @test AoC2019.run_program([3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9]).output == [1]
-    @test AoC2019.run_program([3,3,1105,-1,9,1101,0,0,12,4,12,99,1]).output == [1]
+    @test run_program([3,0,99]).data[0:2] == [1,0,99]
+    @test run_program([3,9,8,9,10,9,4,9,99,-1,8]).output == [0]
+    @test run_program([3,9,8,9,10,9,4,9,99,-1,8],input=[8]).output == [1]
+    @test run_program([3,12,6,12,15,1,13,14,13,4,13,99,-1,0,1,9]).output == [1]
+    @test run_program([3,3,1105,-1,9,1101,0,0,12,4,12,99,1]).output == [1]
     @test run_program([104,1125899906842624,99]).output == [1125899906842624]
     @test run_program([1102,34915192,34915192,7,4,7,99,0]).output == [1219070632396864]
     @test run_program([109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]).output == [109,1,204,-1,1001,100,1,100,1008,100,16,101,1006,101,0,99]
@@ -22,10 +23,3 @@ using AoC2019
 999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99], input=[9]).output ==  [1001]
 end
 
-#@testset "day13.jl" begin
-  input_data = AoC2019.read_numbers("src/input13.txt")
-  test_data = [1,2,3,6,5,4]
-  out = AoC2019.arcade_cabinet(input_data)
-  color_map = Dict(0 => ' ', 1 => 'w', 2 => 'b', 3 => 'p', 4 => 'b')
-  AoC2019.drawArray(out, color_map)
-#end
