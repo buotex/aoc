@@ -1,4 +1,5 @@
-function run_program_async(_data::Array{Int64, 1}, channel_in::Channel{<:Integer}, channel_out::Channel{<:Integer}; memory_size::Int64 = 5000, condition::Condition)
+function run_program_async(_data::Array{Int64, 1}, channel_in::Channel{<:Integer}, channel_out::Channel{<:Integer}; memory_size::Int64 = 5000, #condition::Condition
+                          )
     data = OffsetVector(zeros(Int64, memory_size), 0:memory_size-1)
     data[0:length(_data)-1] = _data
     # state variables
@@ -34,12 +35,14 @@ function run_program_async(_data::Array{Int64, 1}, channel_in::Channel{<:Integer
         @debug("opcode: $opcode, target: $target")
 
         if (opcode == 3)
-#          if condition != nothing
-#            notify(condition)
-#          end
+          #println(stderr, "Notifying")
+          #notify(condition)
+          #println(stderr, "Yielding")
           yield()
+          #println(stderr, "waiting for input")
           input_val = take!(channel_in)
-      @debug("input_val: $input_val, target: $target")
+          #println(stderr, "input_val: $input_val, target: $target")
+        @debug("input_val: $input_val, target: $target")
             data[target] = input_val
         elseif (opcode == 4)
           @debug("output_val: $(data[target])")
@@ -118,9 +121,7 @@ function run_program_async(_data::Array{Int64, 1}, channel_in::Channel{<:Integer
     end
     close(channel_out)
     close(channel_in)
-#    if condition != nothing
-#      notify(condition)
-#    end
+    #notify(condition)
     return data
 end
 

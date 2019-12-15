@@ -20,7 +20,10 @@ function move_controller(state)
   the_pad = findfirst(x -> (x == 3), state.my_display)
   #println(the_ball)
   #println(the_pad)
-  direction = pseudoNormalize(the_ball[2] - the_pad[2])
+  if the_ball === nothing || the_pad === nothing
+    return 0
+  end
+  direction = AoC2019.pseudoNormalize(the_ball[2] - the_pad[2])
   #println(stderr, direction)
   return direction 
 end
@@ -32,8 +35,8 @@ end
 
 function arcade_cabinet(input_data)
 
-  game_input = Channel{Int64}()
-  game_output = Channel{Int64}()
+  game_input = Channel{Int64}(Inf)
+  game_output = Channel{Int64}(Inf)
   #dims = (24, 42)
   dims = (60, 60)
   my_display = zeros(Int8, dims...)
@@ -44,7 +47,7 @@ function arcade_cabinet(input_data)
   condition=Condition()
 
   @sync begin
-    my_program = @async AoC2019.run_program_async(input_data, game_input, game_output; condition=condition)
+    my_program = @async AoC2019.run_program_async(input_data, game_input, game_output)
 
     @async while true
       #println(stderr, "Reading X")
@@ -61,11 +64,15 @@ function arcade_cabinet(input_data)
     end
     @async while true
       try
-        wait(condition)
+        #wait(condition)
+        #println(stderr, "woken up")
         draw_state(state)
         sleep(0.033)
+        #println(stderr, "Broken")
         direction = move_controller(state)
+        #println(stderr, "Inputting $direction")
         put!(game_input, direction)
+        #println(stderr, "Input $direction")
         yield()
       catch 
         break
@@ -79,7 +86,7 @@ function arcade_cabinet(input_data)
   return state.current_score
 end
 
-input_data = read_numbers("src/input13.txt")
+input_data = AoC2019.read_numbers("input13.txt")
 println("Good luck")
 out = arcade_cabinet(input_data)
 println(out)
