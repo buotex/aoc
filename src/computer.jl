@@ -78,6 +78,7 @@ function run_program_async(_data::Array{Int64, 1}, channel_in::Channel{<:Integer
     end
     
     while true
+      try
         @debug("iter")
         opcode_all = data[current_addr]
         opcode_digits = digits(opcode_all)
@@ -118,7 +119,11 @@ function run_program_async(_data::Array{Int64, 1}, channel_in::Channel{<:Integer
           current_rel_addr += get_val(arg1_mode, current_addr+1)
           current_addr += 2
         end
+      catch err
+        break
+      end
     end
+
     close(channel_out)
     close(channel_in)
     #notify(condition)

@@ -11,9 +11,9 @@ function generate_multipliers(phase, length_of_input)
   whole_pattern = Iterators.cycle(stretched_pattern)
   #skip first
   for (i, v) in enumerate(whole_pattern)
-    i-1 > length_of_input && break
     i == 1 && continue
     multipliers[i-1] = v
+    i > length_of_input && break
   end
   return multipliers
 end
@@ -24,13 +24,13 @@ end
 @test generate_multipliers(8, 8) == [0,0,0,0,0,0,0,1]
 
 function get_digit(input, multipliers)::Int8
-  digit::Int8 = 0
-  println(multipliers)
+  digit::Int64 = 0
+  #println(multipliers)
   for (i, m) in zip(input, multipliers)
     digit += (i * m)
-    digit %= 10
+    #digit %= 10
   end
-  return abs(digit)
+  return abs(digit % 10)
 end
 
 function fft_step(input)
@@ -54,5 +54,6 @@ test_input1 = Int8[1,2,3,4,5,6,7,8]
 @test fft_step(test_input1) == Int8[4,8,2,2,6,1,5,8]
 @test my_fft(test_input1, 4) == Int8[0,1,0,2,9,4,9,8]
 test_input2 = Int8[8,0,8,7,1,2,2,4,5,8,5,9,1,4,5,4,6,6,1,9,0,8,3,2,1,8,6,4,5,5,9,5]
-my_fft(test_input2, 1)
-#my_fft(input_data, 1)
+test_input3 = Int8[1,9,6,1,7,8,0,4,2,0,7,2,0,2,2,0,9,1,4,4,9,1,6,0,4,4,1,8,9,9,1,7]
+#my_fft(test_input3, 100)
+my_fft(input_data, 100)

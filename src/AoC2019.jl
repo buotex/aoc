@@ -1,6 +1,7 @@
 module AoC2019
 
 include("./computer.jl")
+include("./graph_algorithms.jl")
 
 using OffsetArrays
 using Logging
@@ -23,7 +24,7 @@ function read_lines(filename)
   end
 end
 
-function read_strings()
+function read_strings(filename)
   input_data = open(filename) do file
       data = readlines(file)
       entries = map(x -> split(x, ","), data)
@@ -31,7 +32,7 @@ function read_strings()
   end
 end
 
-function read_numbers_lines()
+function read_numbers_lines(filename)
   input_data = open(filename) do file
     all_numbers = Int64[]
     data = readlines(file)
@@ -43,6 +44,22 @@ function read_numbers_lines()
     return all_numbers
   end
 end
+
+function read_chars(filename)
+  input_data = open(filename) do file
+    all_numbers = Int8[]
+    while !eof(file)
+      c = read(file, Char)
+      if c == '\n'
+        continue
+      end
+      digit = parse(Int8, c) 
+      push!(all_numbers, digit)
+    end
+    return all_numbers
+  end
+end
+
 
 function matlab2c(image, width, height)
   return transpose(reshape(image, width, height))
