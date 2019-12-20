@@ -1,5 +1,7 @@
+using OffsetArrays
 function run_program_async(_data::Array{Int64, 1}, channel_in::Channel{<:Integer}, channel_out::Channel{<:Integer}; memory_size::Int64 = 5000, #condition::Condition
                           )
+  #println("Starting computer!")
     data = OffsetVector(zeros(Int64, memory_size), 0:memory_size-1)
     data[0:length(_data)-1] = _data
     # state variables
@@ -92,6 +94,7 @@ function run_program_async(_data::Array{Int64, 1}, channel_in::Channel{<:Integer
         @assert arg1_mode in [0,1,2]
         @assert arg2_mode in [0,1,2]
         target_mode = opcode_digits[5]
+        #println("opcode: $opcode")
         @debug("opcode: $opcode")
         @debug("arg1_mode: $arg1_mode")
         @debug("arg2_mode: $arg2_mode")

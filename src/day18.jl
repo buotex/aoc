@@ -3,26 +3,7 @@ import AoC2019
 
 input_data = read(open("input18.txt"), String)
 
-function text2arr(input_data)::Array{Char, 2}
-  line_length = findfirst(x -> (x == '\n'), input_data) - 1
-  input_data_filtered = collect(filter(x -> x != '\n', input_data))
-  reshaped = reshape(input_data_filtered, line_length, :)
-  return permutedims(reshaped) 
-end
-labyrinth_arr = text2arr(input_data)
-
-function arr2text(arr)
-  (x_dim, y_dim) = size(arr)
-  output_str = ""
-  for x in 1:x_dim
-    for y in 1:y_dim
-      output_str *= arr[x,y]
-    end
-    output_str *= '\n'
-  end
-  return output_str
-end
-
+labyrinth_arr = AoC2019.text2arr(input_data)
 
 testdata1 = 
 """#########
@@ -206,13 +187,13 @@ function do_labyrinth_multiple(arr)
     println(max_length)
   end
 end
-#@test do_labyrinth(text2arr(testdata1)) == 8
-#@test do_labyrinth(text2arr(testdata2)) == 86
-#@test do_labyrinth(text2arr(testdata3)) == 132
-#@test do_labyrinth(text2arr(testdata4)) == 136
-#@test do_labyrinth(text2arr(testdata5)) == 81
+#@test do_labyrinth(AoC2019.text2arr(testdata1)) == 8
+#@test do_labyrinth(AoC2019.text2arr(testdata2)) == 86
+#@test do_labyrinth(AoC2019.text2arr(testdata3)) == 132
+#@test do_labyrinth(AoC2019.text2arr(testdata4)) == 136
+#@test do_labyrinth(AoC2019.text2arr(testdata5)) == 81
 #steps_done = do_labyrinth(labyrinth_arr)
-#steps_done = do_labyrinth_multiple(text2arr(testdata6))
+#steps_done = do_labyrinth_multiple(AoC2019.text2arr(testdata6))
 
 
 labyrinth_arr = multiply_robots!(labyrinth_arr)

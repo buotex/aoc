@@ -3,10 +3,6 @@ module AoC2019
 include("./computer.jl")
 include("./graph_algorithms.jl")
 
-using OffsetArrays
-using Logging
-logger = SimpleLogger(stderr, Logging.Debug)
-global_logger(logger)
 
 function read_numbers(filename)
   input_data = open(filename) do file
@@ -86,6 +82,25 @@ function pseudoNormalize(x::T)::Int32 where T<:Number
   else 
     return 0
   end
+end
+
+function arr2text(arr)
+  (x_dim, y_dim) = size(arr)
+  output_str = ""
+  for x in 1:x_dim
+    for y in 1:y_dim
+      output_str *= arr[x,y]
+    end
+    output_str *= '\n'
+  end
+  return output_str
+end
+
+function text2arr(input_data)::Array{Char, 2}
+  line_length = findfirst(x -> (x == '\n'), input_data) - 1
+  input_data_filtered = collect(filter(x -> x != '\n', input_data))
+  reshaped = reshape(input_data_filtered, line_length, :)
+  return permutedims(reshaped) 
 end
 
 end # module
