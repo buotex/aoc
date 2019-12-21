@@ -1,9 +1,6 @@
 using Test
 import AoC2019
 
-input_data = read(open("input18.txt"), String)
-
-labyrinth_arr = AoC2019.text2arr(input_data)
 
 testdata1 = 
 """#########
@@ -187,16 +184,18 @@ function do_labyrinth_multiple(arr)
     println(max_length)
   end
 end
-#@test do_labyrinth(AoC2019.text2arr(testdata1)) == 8
-#@test do_labyrinth(AoC2019.text2arr(testdata2)) == 86
-#@test do_labyrinth(AoC2019.text2arr(testdata3)) == 132
-#@test do_labyrinth(AoC2019.text2arr(testdata4)) == 136
-#@test do_labyrinth(AoC2019.text2arr(testdata5)) == 81
+@test do_labyrinth(AoC2019.text2arr(testdata1)) == 8
+@test do_labyrinth(AoC2019.text2arr(testdata2)) == 86
+@test do_labyrinth(AoC2019.text2arr(testdata3)) == 132
+@test do_labyrinth(AoC2019.text2arr(testdata4)) == 136
+@test do_labyrinth(AoC2019.text2arr(testdata5)) == 81
 #steps_done = do_labyrinth(labyrinth_arr)
 #steps_done = do_labyrinth_multiple(AoC2019.text2arr(testdata6))
 
+input_data = read(open("input18.txt"), String)
+labyrinth_arr = AoC2019.text2arr(input_data)
 
 labyrinth_arr = multiply_robots!(labyrinth_arr)
 steps_done = do_labyrinth_multiple(labyrinth_arr)
-
+println(steps_done)
 
