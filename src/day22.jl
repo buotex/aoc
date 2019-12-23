@@ -24,13 +24,14 @@ function do_commands_helper(commands; num_cards, track_card, do_reverse=false, i
     commands = reverse(commands)
   end
   for command in commands
-    #println(command)
+    println(command)
     tokens = split(command)
     if tokens[1] == "deal"
       if tokens[2] == "into"
-        #current_num = (num_cards - 1) - current_num
-        current_num = mod(-current_num, num_cards)
-        operations .*= -1
+        current_num = (num_cards - 1) - current_num
+        #current_num = mod(-current_num, num_cards)
+        operations[2] = (num_cards -1) - operations[2]
+        operations[1] *= -1
       elseif tokens[2] == "with"
         local N = parse(Int, tokens[4])
         if ! do_reverse
@@ -53,16 +54,18 @@ function do_commands_helper(commands; num_cards, track_card, do_reverse=false, i
         operations[2] += N
       end
     end
-    operations[1] = mod(operations[1], num_cards)
-    operations[2] = mod(operations[2], num_cards)
+    operations = mod.(operations, num_cards)
+    println("operations: $operations")
     println("Current_num: $current_num")
+    current_num_alt = mod(track_card * operations[1] + operations[2], num_cards)
+    println("current_num_alt: $current_num_alt")
   end
   #println(operations)
   return operations
 end
 
 
-function fast_exp(kernel_operation::Array{Int128, 1}; iterations::UInt64, modulo::UInt64)::Array{Int128, 1}
+function fast_exp(kernel_operation::Array{Int128, 1}; iterations::Int64, modulo::Int64)::Array{Int128, 1}
   binary = bitstring(iterations)
   combined_operation::Array{Int128, 1} = kernel_operation
   new_operation::Array{Int128, 1} = Int128[1,0]
@@ -82,27 +85,23 @@ function fast_exp(kernel_operation::Array{Int128, 1}; iterations::UInt64, modulo
 end
 
 
-@test fast_exp(Int128[2,1], iterations=UInt64(2), modulo=UInt64(50)) == [4,3]
-@test fast_exp(Int128[2,1], iterations=UInt64(3), modulo=UInt64(50)) == [8,7]
-@test fast_exp(Int128[2,1], iterations=UInt64(4), modulo=UInt64(50)) == [16,15]
-@test fast_exp(Int128[2,2], iterations=UInt64(2), modulo=UInt64(50)) == [4, 6]
-@test fast_exp(Int128[2,2], iterations=UInt64(4), modulo=UInt64(50)) == [16, 30]
-@test fast_exp(Int128[2,2], iterations=UInt64(3), modulo=UInt64(50)) == [8,14]
+@test fast_exp(Int128[2,1], iterations=Int64(2), modulo=Int64(50)) == [4,3]
+@test fast_exp(Int128[2,1], iterations=Int64(3), modulo=Int64(50)) == [8,7]
+@test fast_exp(Int128[2,1], iterations=Int64(4), modulo=Int64(50)) == [16,15]
+@test fast_exp(Int128[2,2], iterations=Int64(2), modulo=Int64(50)) == [4, 6]
+@test fast_exp(Int128[2,2], iterations=Int64(4), modulo=Int64(50)) == [16, 30]
+@test fast_exp(Int128[2,2], iterations=Int64(3), modulo=Int64(50)) == [8,14]
 
 
 function do_commands(commands; num_cards, track_card, do_reverse=false, iterations=1)::Int128
-  if typeof(iterations) <: Int
-    iterations = UInt64(iterations)
-  end
-  if typeof(num_cards) <: Int
-    num_cards = UInt64(num_cards)
-  end
   operations::Array{Int128, 1} = do_commands_helper(commands, num_cards=num_cards, track_card=track_card, do_reverse=do_reverse, iterations=iterations)
   operations = fast_exp(operations, iterations=iterations, modulo=num_cards)
   println(operations)
   return mod(track_card * operations[1] + operations[2], num_cards)
 end
 
+task_result = do_commands(task_commands, num_cards=10007, track_card=2019, do_reverse=false)
+@test task_result == 7860
 
 @test do_commands(split(test_commands1, '\n'), num_cards=10, track_card=7) == 9
 @test do_commands(split(test_commands1, '\n'), num_cards=10, track_card=9, do_reverse=true) == 7
@@ -124,8 +123,6 @@ test_result0_back = do_commands(split(test_commands2, '\n'), num_cards=10007, tr
 iterations= 101741582076661
 num_cards = 119315717514047
 
-task_result = do_commands(task_commands, num_cards=10007, track_card=2019, do_reverse=false)
-@test task_result == 7860
 
 task_operations_1 = do_commands(task_commands, num_cards=119315717514047, track_card=2020, do_reverse=true, iterations=1)
 task_operations_2 = do_commands(task_commands, num_cards=119315717514047, track_card=task_operations_1, do_reverse=true, iterations=1)
