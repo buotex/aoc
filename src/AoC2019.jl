@@ -93,7 +93,7 @@ function arr2text(arr)
     end
     output_str *= '\n'
   end
-  return output_str
+  return output_str[1:end-1]
 end
 
 function text2arr(input_data)::Array{Char, 2}
